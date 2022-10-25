@@ -1,0 +1,26 @@
+version: '3.7'
+services:
+  database:
+    image: postgres:12-alpine
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: postgres
+  
+  api:
+    image: ajialy-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    command: sh -c 'yarn database:setup && yarn start'
+    environment:
+      DATABASE_URL: postgresql://postgres@database:5432/mydb?schema=public
+    ports:
+      - '3000:3000'
