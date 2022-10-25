@@ -19,7 +19,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: builder
-    command: sh -c 'yarn database:setup && yarn start'
+    command: sh -c 'yarn database:setup && yarn prisma generate && yarn start'
     environment:
       DATABASE_URL: postgresql://postgres@database:5432/mydb?schema=public
     ports:

@@ -13,7 +13,7 @@ datasource db {
 model Song {
   id Int @default(autoincrement()) @id
   name String
-  artist String[]
+  artists String[]
   lyrics_eng String
   lyrics_por String
 }
