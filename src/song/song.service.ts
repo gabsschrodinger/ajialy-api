@@ -9,7 +9,7 @@ export class SongService {
   async getAllSongs(): Promise<SongDto[]> {
     const songEntities = await this.prisma.song.findMany();
 
-    return songEntities.map((entity) => SongDto.fromEntity(entity));
+    return songEntities.map((entity) => SongDto.fromSongEntity(entity));
   }
 
   async saveSong(song: SongDto): Promise<SongDto> {
@@ -17,6 +17,6 @@ export class SongService {
       data: song.toSongEntity(),
     });
 
-    return SongDto.fromEntity(songEntity);
+    return SongDto.fromSongEntity(songEntity);
   }
 }

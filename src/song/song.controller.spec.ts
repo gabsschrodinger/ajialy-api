@@ -37,7 +37,7 @@ describe('SongController', () => {
   });
 
   describe('save song', () => {
-    const mockedSongDto = SongDto.fromEntity(generateMockSong());
+    const mockedSongDto = SongDto.fromSongEntity(generateMockSong());
 
     it('should return the service response', async () => {
       songService.saveSong = jest

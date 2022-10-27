@@ -10,6 +10,9 @@ export class SongDto {
   artists: string[];
 
   @IsString()
+  japaneseLyrics: string;
+
+  @IsString()
   englishLyrics: string;
 
   @IsString()
@@ -18,11 +21,13 @@ export class SongDto {
   constructor({
     name,
     artists,
+    japaneseLyrics,
     englishLyrics,
     portugueseLyrics,
   }: GetProperties<SongDto>) {
     this.name = name;
     this.artists = artists;
+    this.japaneseLyrics = japaneseLyrics;
     this.englishLyrics = englishLyrics;
     this.portugueseLyrics = portugueseLyrics;
   }
@@ -32,15 +37,23 @@ export class SongDto {
       id: undefined,
       name: this.name,
       artists: this.artists,
+      lyrics_jp: this.japaneseLyrics,
       lyrics_eng: this.englishLyrics,
       lyrics_por: this.portugueseLyrics,
     };
   }
 
-  static fromEntity({ name, artists, lyrics_eng, lyrics_por }: Song): SongDto {
+  static fromSongEntity({
+    name,
+    artists,
+    lyrics_jp,
+    lyrics_eng,
+    lyrics_por,
+  }: Song): SongDto {
     return new SongDto({
       name,
       artists,
+      japaneseLyrics: lyrics_jp,
       englishLyrics: lyrics_eng,
       portugueseLyrics: lyrics_por,
     });

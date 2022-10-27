@@ -38,7 +38,7 @@ describe('SongService', () => {
       const foundSongs = await songService.getAllSongs();
 
       expect(foundSongs).toEqual(
-        mockedSongs.map((song) => SongDto.fromEntity(song)),
+        mockedSongs.map((song) => SongDto.fromSongEntity(song)),
       );
     });
   });
@@ -52,7 +52,7 @@ describe('SongService', () => {
         .mockImplementation(async ({ data }: { data: Song }) =>
           Promise.resolve(data),
         );
-      const songDto = SongDto.fromEntity(mockedSong);
+      const songDto = SongDto.fromSongEntity(mockedSong);
 
       await songService.saveSong(songDto);
 
@@ -67,7 +67,7 @@ describe('SongService', () => {
         .mockImplementation(async ({ data }: { data: Song }) =>
           Promise.resolve(data),
         );
-      const songDto = SongDto.fromEntity(mockedSong);
+      const songDto = SongDto.fromSongEntity(mockedSong);
 
       const savedSong = await songService.saveSong(songDto);
 

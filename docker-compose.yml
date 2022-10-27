@@ -22,5 +22,8 @@ services:
     command: sh -c 'yarn database:setup && yarn prisma generate && yarn start'
     environment:
       DATABASE_URL: postgresql://postgres@database:5432/mydb?schema=public
+    depends_on:
+      database:
+        condition: service_healthy
     ports:
       - '3000:3000'

@@ -6,6 +6,7 @@ export function generateMockSong(): Song {
     id: faker.datatype.number(),
     name: faker.music.songName(),
     artists: [faker.name.fullName()],
+    lyrics_jp: faker.lorem.text(),
     lyrics_eng: faker.lorem.text(),
     lyrics_por: faker.lorem.text(),
   };
