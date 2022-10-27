@@ -1,10 +1,10 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { SongDto } from './song.dtos';
 
 @Injectable()
 export class SongService {
-  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async getAllSongs(): Promise<SongDto[]> {
     const songEntities = await this.prisma.song.findMany();

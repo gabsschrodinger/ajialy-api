@@ -1,10 +1,18 @@
 import { Song } from '@prisma/client';
+import { IsArray, IsString } from 'class-validator';
 import { GetProperties } from 'src/utils/types.utils';
 
 export class SongDto {
+  @IsString()
   name: string;
+
+  @IsArray()
   artists: string[];
+
+  @IsString()
   englishLyrics: string;
+
+  @IsString()
   portugueseLyrics: string;
 
   constructor({
