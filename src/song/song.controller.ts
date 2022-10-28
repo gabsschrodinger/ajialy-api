@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  ValidationPipe,
+} from '@nestjs/common';
 import { SongDto } from './song.dtos';
 import { SongService } from './song.service';
 
@@ -9,6 +17,11 @@ export class SongController {
   @Get()
   async getAllSongs(): Promise<SongDto[]> {
     return this.songService.getAllSongs();
+  }
+
+  @Get(':id')
+  async getSongById(@Param('id', ParseIntPipe) id: number): Promise<SongDto> {
+    return this.songService.getSongById(id);
   }
 
   @Post()

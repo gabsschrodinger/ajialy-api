@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '../prisma.service';
 import { SongController } from './song.controller';
@@ -33,6 +34,20 @@ describe('SongController', () => {
 
       expect(songService.getAllSongs).toHaveBeenCalled();
       expect(foundSongs).toEqual(mockedSongs);
+    });
+  });
+
+  describe('get song by id', () => {
+    const randomId = faker.datatype.number();
+    const mockedSong = generateMockSong({ id: randomId });
+
+    it('should return the service response', async () => {
+      songService.getSongById = jest.fn().mockResolvedValue(mockedSong);
+
+      const foundSong = await songController.getSongById(randomId);
+
+      expect(songService.getSongById).toHaveBeenCalledWith(randomId);
+      expect(foundSong).toEqual(mockedSong);
     });
   });
 
