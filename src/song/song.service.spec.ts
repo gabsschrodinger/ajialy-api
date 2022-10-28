@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import { NotFoundException } from '@nestjs/common/exceptions';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Song } from '@prisma/client';
 import { plainToClass } from 'class-transformer';
@@ -112,6 +113,14 @@ describe('SongService', () => {
       const foundSong = await songService.getSongById(randomId);
 
       expect(foundSong).toEqual(SongDto.fromSongEntity(mockedSong));
+    });
+
+    it('should throw Not Found when no song is found', async () => {
+      prismaService.song.findUnique = jest.fn().mockResolvedValue(undefined);
+
+      await expect(songService.getSongById(randomId)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });
