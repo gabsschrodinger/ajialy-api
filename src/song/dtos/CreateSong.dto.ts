@@ -1,5 +1,6 @@
 import { Song } from '@prisma/client';
-import { IsString } from 'class-validator';
+import { IsEnum, IsString } from 'class-validator';
+import { OriginalLyrics } from '../enums/OriginalLyrics';
 
 export class CreateSongDto {
   @IsString()
@@ -17,6 +18,9 @@ export class CreateSongDto {
   @IsString()
   portugueseLyrics: string;
 
+  @IsEnum(OriginalLyrics)
+  originalLyrics: OriginalLyrics;
+
   toSongEntity(): Song {
     return {
       id: undefined,
@@ -25,6 +29,7 @@ export class CreateSongDto {
       lyrics_jp: this.japaneseLyrics,
       lyrics_eng: this.englishLyrics,
       lyrics_por: this.portugueseLyrics,
+      original_lyrics: this.originalLyrics,
     };
   }
 }

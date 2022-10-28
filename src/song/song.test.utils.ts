@@ -1,5 +1,6 @@
 import { Song } from '@prisma/client';
 import { faker } from '@faker-js/faker';
+import { OriginalLyrics } from './enums/OriginalLyrics';
 
 export function generateMockSong({ id }: Partial<Song> = {}): Song {
   return {
@@ -9,5 +10,6 @@ export function generateMockSong({ id }: Partial<Song> = {}): Song {
     lyrics_jp: faker.lorem.text(),
     lyrics_eng: faker.lorem.text(),
     lyrics_por: faker.lorem.text(),
+    original_lyrics: faker.helpers.objectValue(OriginalLyrics),
   };
 }

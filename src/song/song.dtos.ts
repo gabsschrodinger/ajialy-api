@@ -1,6 +1,7 @@
 import { Song } from '@prisma/client';
 import { plainToClass } from 'class-transformer';
-import { IsArray, IsString } from 'class-validator';
+import { IsArray, IsEnum, IsString } from 'class-validator';
+import { OriginalLyrics } from './enums/OriginalLyrics';
 
 export class SongDto {
   @IsString()
@@ -18,6 +19,9 @@ export class SongDto {
   @IsString()
   portugueseLyrics: string;
 
+  @IsEnum(OriginalLyrics)
+  originalLyrics: OriginalLyrics;
+
   toSongEntity(): Song {
     return {
       id: undefined,
@@ -26,6 +30,7 @@ export class SongDto {
       lyrics_jp: this.japaneseLyrics,
       lyrics_eng: this.englishLyrics,
       lyrics_por: this.portugueseLyrics,
+      original_lyrics: this.originalLyrics,
     };
   }
 
@@ -35,6 +40,7 @@ export class SongDto {
     lyrics_jp,
     lyrics_eng,
     lyrics_por,
+    original_lyrics,
   }: Song): SongDto {
     const mapped = {
       name,
@@ -42,6 +48,7 @@ export class SongDto {
       japaneseLyrics: lyrics_jp,
       englishLyrics: lyrics_eng,
       portugueseLyrics: lyrics_por,
+      originalLyrics: original_lyrics,
     };
 
     return plainToClass(SongDto, mapped);

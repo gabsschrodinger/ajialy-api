@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreateSongDto } from './dtos/CreateSong.dto';
 import { SongResponseDto } from './dtos/SongResponse.dto';
@@ -16,6 +16,16 @@ export class SongService {
 
   async getSongById(id: number): Promise<SongDto> {
     const songEntity = await this.prisma.song.findUnique({ where: { id } });
+
+    if (!songEntity) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: `Song with ID ${id} was not found`,
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
 
     return SongDto.fromSongEntity(songEntity);
   }

@@ -61,6 +61,7 @@ describe('SongController', () => {
       japaneseLyrics: songMock.lyrics_jp,
       englishLyrics: songMock.lyrics_eng,
       portugueseLyrics: songMock.lyrics_por,
+      originalLyrics: songMock.original_lyrics,
     });
 
     it('should return the service response', async () => {
@@ -73,6 +74,7 @@ describe('SongController', () => {
             japaneseLyrics,
             englishLyrics,
             portugueseLyrics,
+            originalLyrics,
           }: CreateSongDto) =>
             Promise.resolve(
               plainToClass(SongResponseDto, {
@@ -82,6 +84,7 @@ describe('SongController', () => {
                 japaneseLyrics,
                 englishLyrics,
                 portugueseLyrics,
+                originalLyrics,
               }),
             ),
         );

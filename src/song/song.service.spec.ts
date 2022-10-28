@@ -61,6 +61,7 @@ describe('SongService', () => {
         japaneseLyrics: mockedSong.lyrics_jp,
         englishLyrics: mockedSong.lyrics_eng,
         portugueseLyrics: mockedSong.lyrics_por,
+        originalLyrics: mockedSong.original_lyrics,
       });
 
       await songService.saveSong(createSongDto);
@@ -70,17 +71,24 @@ describe('SongService', () => {
       });
     });
 
-    it('should return the saved song dto', async () => {
+    it('should return the saved song response dto', async () => {
       prismaService.song.create = jest
         .fn()
         .mockImplementation(async ({ data }: { data: Song }) =>
           Promise.resolve(data),
         );
-      const songDto = SongDto.fromSongEntity(mockedSong);
+      const createSongDto = plainToClass(CreateSongDto, {
+        name: mockedSong.name,
+        artists: mockedSong.artists,
+        japaneseLyrics: mockedSong.lyrics_jp,
+        englishLyrics: mockedSong.lyrics_eng,
+        portugueseLyrics: mockedSong.lyrics_por,
+        originalLyrics: mockedSong.original_lyrics,
+      });
 
-      const savedSong = await songService.saveSong(songDto);
+      const savedSong = await songService.saveSong(createSongDto);
 
-      expect(savedSong).toEqual(songDto);
+      expect(savedSong).toEqual(createSongDto);
     });
   });
 
