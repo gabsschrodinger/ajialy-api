@@ -690,7 +690,7 @@
     webpack "5.74.0"
     webpack-node-externals "3.0.0"
 
-"@nestjs/common@^9.0.0":
+"@nestjs/common@^9.1.6":
   version "9.1.6"
   resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-9.1.6.tgz#79d71fb702816c07d8479f5aec71815c1762eea7"
   integrity sha512-9Ttk9va/BwEab36RSXLZdRoPUX3DZHUpzseKEfqHVhnaUIsIMt7lVd79GQ1FroQ2FZqoCwcLyBowevXhrE1Wnw==
@@ -699,7 +699,7 @@
     tslib "2.4.0"
     uuid "9.0.0"
 
-"@nestjs/core@^9.0.0":
+"@nestjs/core@^9.1.6":
   version "9.1.6"
   resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-9.1.6.tgz#b73a453a40470a1456fc404384b195e816da0828"
   integrity sha512-B52nYYTDSH72f1DU0G14NQSPCviXRE9fCp2/gUHuWIfVfBwcmVBAxVgyB/jAIUAhhj1f5/2odwUiw194xYtRRA==
@@ -712,7 +712,7 @@
     tslib "2.4.0"
     uuid "9.0.0"
 
-"@nestjs/platform-express@^9.0.0":
+"@nestjs/platform-express@^9.1.6":
   version "9.1.6"
   resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-9.1.6.tgz#01e0dc29bb02d1a3820a5da4f2a0a534b97c75cb"
   integrity sha512-zZuB1g6yIPytPIzp0EYKWT+1d02hOQ5aU6VdtO6Qg0Wn1RjdjGh3kScsqdamMEjzt0WAfL8DjE5oqrLgvashsw==
@@ -3983,7 +3983,7 @@ rxjs@6.6.7, rxjs@^6.6.0:
   dependencies:
     tslib "^1.9.0"
 
-rxjs@^7.2.0, rxjs@^7.5.5:
+rxjs@^7.5.5, rxjs@^7.5.7:
   version "7.5.7"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-7.5.7.tgz#2ec0d57fdc89ece220d2e702730ae8f1e49def39"
   integrity sha512-z9MzKh/UcOqB3i20H6rtrlaE/CgjLOvheWK/9ILrbhROGTweAi1BaFsTT9FbwZi5Trr1qNRs+MXkhmR06awzQA==
