@@ -1,8 +1,10 @@
 import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
+import { plainToClass } from 'class-transformer';
 import { PrismaService } from '../prisma.service';
+import { CreateSongDto } from './dtos/CreateSong.dto';
+import { SongResponseDto } from './dtos/SongResponse.dto';
 import { SongController } from './song.controller';
-import { SongDto } from './song.dtos';
 import { SongService } from './song.service';
 import { generateMockSong } from './song.test.utils';
 
@@ -52,17 +54,45 @@ describe('SongController', () => {
   });
 
   describe('save song', () => {
-    const mockedSongDto = SongDto.fromSongEntity(generateMockSong());
+    const songMock = generateMockSong();
+    const createSongRequest = plainToClass(CreateSongDto, {
+      name: songMock.name,
+      artists: songMock.artists,
+      japaneseLyrics: songMock.lyrics_jp,
+      englishLyrics: songMock.lyrics_eng,
+      portugueseLyrics: songMock.lyrics_por,
+    });
 
     it('should return the service response', async () => {
       songService.saveSong = jest
         .fn()
-        .mockImplementation(async (song: SongDto) => Promise.resolve(song));
+        .mockImplementation(
+          async ({
+            name,
+            artists,
+            japaneseLyrics,
+            englishLyrics,
+            portugueseLyrics,
+          }: CreateSongDto) =>
+            Promise.resolve(
+              plainToClass(SongResponseDto, {
+                id: faker.datatype.number(),
+                name,
+                artists,
+                japaneseLyrics,
+                englishLyrics,
+                portugueseLyrics,
+              }),
+            ),
+        );
 
-      const savedSong = await songController.saveSong(mockedSongDto);
+      const savedSong = await songController.saveSong(createSongRequest);
 
-      expect(songService.saveSong).toHaveBeenCalledWith(mockedSongDto);
-      expect(savedSong).toEqual(mockedSongDto);
+      expect(songService.saveSong).toHaveBeenCalledWith(createSongRequest);
+      expect(savedSong).toEqual({
+        id: expect.any(Number),
+        ...createSongRequest,
+      });
     });
   });
 });

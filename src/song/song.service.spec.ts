@@ -1,7 +1,9 @@
 import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Song } from '@prisma/client';
+import { plainToClass } from 'class-transformer';
 import { PrismaService } from '../prisma.service';
+import { CreateSongDto } from './dtos/CreateSong.dto';
 import { SongDto } from './song.dtos';
 import { SongService } from './song.service';
 import { generateMockSong } from './song.test.utils';
@@ -53,12 +55,18 @@ describe('SongService', () => {
         .mockImplementation(async ({ data }: { data: Song }) =>
           Promise.resolve(data),
         );
-      const songDto = SongDto.fromSongEntity(mockedSong);
+      const createSongDto = plainToClass(CreateSongDto, {
+        name: mockedSong.name,
+        artists: mockedSong.artists,
+        japaneseLyrics: mockedSong.lyrics_jp,
+        englishLyrics: mockedSong.lyrics_eng,
+        portugueseLyrics: mockedSong.lyrics_por,
+      });
 
-      await songService.saveSong(songDto);
+      await songService.saveSong(createSongDto);
 
       expect(prismaService.song.create).toHaveBeenCalledWith({
-        data: songDto.toSongEntity(),
+        data: createSongDto.toSongEntity(),
       });
     });
 

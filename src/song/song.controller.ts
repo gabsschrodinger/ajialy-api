@@ -7,6 +7,8 @@ import {
   Post,
   ValidationPipe,
 } from '@nestjs/common';
+import { CreateSongDto } from './dtos/CreateSong.dto';
+import { SongResponseDto } from './dtos/SongResponse.dto';
 import { SongDto } from './song.dtos';
 import { SongService } from './song.service';
 
@@ -27,8 +29,8 @@ export class SongController {
   @Post()
   async saveSong(
     @Body(new ValidationPipe({ transform: true }))
-    song: SongDto,
-  ): Promise<SongDto> {
-    return this.songService.saveSong(song);
+    createSongDto: CreateSongDto,
+  ): Promise<SongResponseDto> {
+    return this.songService.saveSong(createSongDto);
   }
 }

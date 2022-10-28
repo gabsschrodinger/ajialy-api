@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
+import { CreateSongDto } from './dtos/CreateSong.dto';
+import { SongResponseDto } from './dtos/SongResponse.dto';
 import { SongDto } from './song.dtos';
 
 @Injectable()
@@ -18,11 +20,11 @@ export class SongService {
     return SongDto.fromSongEntity(songEntity);
   }
 
-  async saveSong(song: SongDto): Promise<SongDto> {
+  async saveSong(song: CreateSongDto): Promise<SongResponseDto> {
     const songEntity = await this.prisma.song.create({
       data: song.toSongEntity(),
     });
 
-    return SongDto.fromSongEntity(songEntity);
+    return SongResponseDto.fromSongEntity(songEntity);
   }
 }
