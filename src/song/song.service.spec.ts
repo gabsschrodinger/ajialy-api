@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Song } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
@@ -72,6 +73,29 @@ describe('SongService', () => {
       const savedSong = await songService.saveSong(songDto);
 
       expect(savedSong).toEqual(songDto);
+    });
+  });
+
+  describe('get song by id', () => {
+    const randomId = faker.datatype.number();
+
+    it('should get song entities from the database', async () => {
+      prismaService.song.findUnique = jest.fn().mockResolvedValue({});
+
+      await songService.getSongById(randomId);
+
+      expect(prismaService.song.findUnique).toHaveBeenCalledWith({
+        where: { id: randomId },
+      });
+    });
+
+    it('should return song entities converted to dto', async () => {
+      const mockedSong = generateMockSong({ id: randomId });
+      prismaService.song.findUnique = jest.fn().mockResolvedValue(mockedSong);
+
+      const foundSong = await songService.getSongById(randomId);
+
+      expect(foundSong).toEqual(SongDto.fromSongEntity(mockedSong));
     });
   });
 });

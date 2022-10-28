@@ -12,6 +12,12 @@ export class SongService {
     return songEntities.map((entity) => SongDto.fromSongEntity(entity));
   }
 
+  async getSongById(id: number): Promise<SongDto> {
+    const songEntity = await this.prisma.song.findUnique({ where: { id } });
+
+    return SongDto.fromSongEntity(songEntity);
+  }
+
   async saveSong(song: SongDto): Promise<SongDto> {
     const songEntity = await this.prisma.song.create({
       data: song.toSongEntity(),
