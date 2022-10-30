@@ -26,7 +26,6 @@ export class SongDto {
     return {
       id: undefined,
       name: this.name,
-      artists: this.artists,
       lyrics_jp: this.japaneseLyrics,
       lyrics_eng: this.englishLyrics,
       lyrics_por: this.portugueseLyrics,
@@ -36,7 +35,6 @@ export class SongDto {
 
   static fromSongEntity({
     name,
-    artists,
     lyrics_jp,
     lyrics_eng,
     lyrics_por,
@@ -44,7 +42,7 @@ export class SongDto {
   }: Song): SongDto {
     const mapped = {
       name,
-      artists,
+      artists: [],
       japaneseLyrics: lyrics_jp,
       englishLyrics: lyrics_eng,
       portugueseLyrics: lyrics_por,

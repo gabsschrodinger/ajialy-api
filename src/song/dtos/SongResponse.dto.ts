@@ -14,7 +14,6 @@ export class SongResponseDto {
   static fromSongEntity({
     id,
     name,
-    artists,
     lyrics_jp,
     lyrics_eng,
     lyrics_por,
@@ -23,7 +22,7 @@ export class SongResponseDto {
     const mapped = {
       id,
       name,
-      artists,
+      artists: [],
       japaneseLyrics: lyrics_jp,
       englishLyrics: lyrics_eng,
       portugueseLyrics: lyrics_por,

@@ -57,7 +57,6 @@ describe('SongController', () => {
     const songMock = generateMockSong();
     const createSongRequest = plainToClass(CreateSongDto, {
       name: songMock.name,
-      artists: songMock.artists,
       japaneseLyrics: songMock.lyrics_jp,
       englishLyrics: songMock.lyrics_eng,
       portugueseLyrics: songMock.lyrics_por,

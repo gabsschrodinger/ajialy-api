@@ -1,5 +1,8 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { NotFoundException } from '@nestjs/common/exceptions';
+import {
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common/exceptions';
 import { PrismaService } from '../prisma.service';
 import { CreateSongDto } from './dtos/CreateSong.dto';
 import { SongResponseDto } from './dtos/SongResponse.dto';
@@ -29,8 +32,26 @@ export class SongService {
   }
 
   async saveSong(song: CreateSongDto): Promise<SongResponseDto> {
+    const artistEntities = await this.prisma.artist.findMany({
+      where: { OR: song.artists.map((name) => ({ name })) },
+    });
+
+    if (artistEntities.length !== song.artists.length) {
+      throw new BadRequestException({
+        status: HttpStatus.BAD_REQUEST,
+        error: 'Invalid artist',
+      });
+    }
+
     const songEntity = await this.prisma.song.create({
-      data: song.toSongEntity(),
+      data: {
+        ...song.toSongEntity(),
+        artists: {
+          createMany: {
+            data: artistEntities.map(({ id }) => ({ artist_id: id })),
+          },
+        },
+      },
     });
 
     return SongResponseDto.fromSongEntity(songEntity);

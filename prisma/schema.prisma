@@ -10,12 +10,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Artist {
+  id    Int              @id @default(autoincrement())
+  name  String
+  songs ArtistsOnSongs[]
+  image String
+}
+
 model Song {
-  id              Int      @id @default(autoincrement())
+  id              Int              @id @default(autoincrement())
   name            String
-  artists         String[]
   lyrics_eng      String
   lyrics_por      String
   lyrics_jp       String
   original_lyrics String
+  artists         ArtistsOnSongs[]
+}
+
+model ArtistsOnSongs {
+  song      Song   @relation(fields: [song_id], references: [id])
+  song_id   Int
+  artist    Artist @relation(fields: [artist_id], references: [id])
+  artist_id Int
+
+  @@id([song_id, artist_id])
 }

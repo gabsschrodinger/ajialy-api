@@ -25,7 +25,6 @@ export class CreateSongDto {
     return {
       id: undefined,
       name: this.name,
-      artists: this.artists,
       lyrics_jp: this.japaneseLyrics,
       lyrics_eng: this.englishLyrics,
       lyrics_por: this.portugueseLyrics,

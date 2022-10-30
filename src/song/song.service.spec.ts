@@ -56,9 +56,10 @@ describe('SongService', () => {
         .mockImplementation(async ({ data }: { data: Song }) =>
           Promise.resolve(data),
         );
+      prismaService.artist.findMany = jest.fn().mockResolvedValue([]);
       const createSongDto = plainToClass(CreateSongDto, {
         name: mockedSong.name,
-        artists: mockedSong.artists,
+        artists: [],
         japaneseLyrics: mockedSong.lyrics_jp,
         englishLyrics: mockedSong.lyrics_eng,
         portugueseLyrics: mockedSong.lyrics_por,
@@ -68,7 +69,7 @@ describe('SongService', () => {
       await songService.saveSong(createSongDto);
 
       expect(prismaService.song.create).toHaveBeenCalledWith({
-        data: createSongDto.toSongEntity(),
+        data: expect.objectContaining(createSongDto.toSongEntity()),
       });
     });
 
@@ -78,9 +79,10 @@ describe('SongService', () => {
         .mockImplementation(async ({ data }: { data: Song }) =>
           Promise.resolve(data),
         );
+      prismaService.artist.findMany = jest.fn().mockResolvedValue([]);
       const createSongDto = plainToClass(CreateSongDto, {
         name: mockedSong.name,
-        artists: mockedSong.artists,
+        artists: [],
         japaneseLyrics: mockedSong.lyrics_jp,
         englishLyrics: mockedSong.lyrics_eng,
         portugueseLyrics: mockedSong.lyrics_por,
