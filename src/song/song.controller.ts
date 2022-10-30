@@ -9,7 +9,6 @@ import {
 } from '@nestjs/common';
 import { CreateSongDto } from './dtos/CreateSong.dto';
 import { SongResponseDto } from './dtos/SongResponse.dto';
-import { SongDto } from './song.dtos';
 import { SongService } from './song.service';
 
 @Controller('songs')
@@ -22,7 +21,9 @@ export class SongController {
   }
 
   @Get(':id')
-  async getSongById(@Param('id', ParseIntPipe) id: number): Promise<SongDto> {
+  async getSongById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<SongResponseDto> {
     return this.songService.getSongById(id);
   }
 

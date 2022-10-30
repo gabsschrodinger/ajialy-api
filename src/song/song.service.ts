@@ -3,23 +3,27 @@ import {
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common/exceptions';
+import { Artist, Song } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 import { CreateSongDto } from './dtos/CreateSong.dto';
 import { SongResponseDto } from './dtos/SongResponse.dto';
-import { SongDto } from './song.dtos';
 
 @Injectable()
 export class SongService {
   constructor(private readonly prisma: PrismaService) {}
+
+  private async getSongArtists(song: Song): Promise<Artist[]> {
+    return this.prisma.artist.findMany({
+      where: { songs: { some: { song_id: song.id } } },
+    });
+  }
 
   async getAllSongs(): Promise<SongResponseDto[]> {
     const songs: SongResponseDto[] = [];
     const songEntities = await this.prisma.song.findMany();
 
     for (const songEntity of songEntities) {
-      const songArtists = await this.prisma.artist.findMany({
-        where: { songs: { some: { song_id: songEntity.id } } },
-      });
+      const songArtists = await this.getSongArtists(songEntity);
 
       songs.push(SongResponseDto.fromEntities(songEntity, songArtists));
     }
@@ -27,7 +31,7 @@ export class SongService {
     return songs;
   }
 
-  async getSongById(id: number): Promise<SongDto> {
+  async getSongById(id: number): Promise<SongResponseDto> {
     const songEntity = await this.prisma.song.findUnique({ where: { id } });
 
     if (!songEntity) {
@@ -37,7 +41,8 @@ export class SongService {
       });
     }
 
-    return SongDto.fromSongEntity(songEntity);
+    const songArtists = await this.getSongArtists(songEntity);
+    return SongResponseDto.fromEntities(songEntity, songArtists);
   }
 
   async saveSong(song: CreateSongDto): Promise<SongResponseDto> {

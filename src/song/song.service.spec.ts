@@ -6,7 +6,6 @@ import { plainToClass } from 'class-transformer';
 import { PrismaService } from '../prisma.service';
 import { CreateSongDto } from './dtos/CreateSong.dto';
 import { SongResponseDto } from './dtos/SongResponse.dto';
-import { SongDto } from './song.dtos';
 import { SongService } from './song.service';
 import { generateMockArtist, generateMockSong } from '../utils/test.utils';
 
@@ -108,6 +107,7 @@ describe('SongService', () => {
 
     it('should get song entities from the database', async () => {
       prismaService.song.findUnique = jest.fn().mockResolvedValue({});
+      prismaService.artist.findMany = jest.fn().mockResolvedValue([]);
 
       await songService.getSongById(randomId);
 
@@ -119,10 +119,13 @@ describe('SongService', () => {
     it('should return song entities converted to dto', async () => {
       const mockedSong = generateMockSong({ id: randomId });
       prismaService.song.findUnique = jest.fn().mockResolvedValue(mockedSong);
+      prismaService.artist.findMany = jest.fn().mockResolvedValue([]);
 
       const foundSong = await songService.getSongById(randomId);
 
-      expect(foundSong).toEqual(SongDto.fromSongEntity(mockedSong));
+      expect(foundSong).toEqual(
+        expect.objectContaining(SongResponseDto.fromEntities(mockedSong)),
+      );
     });
 
     it('should throw Not Found when no song is found', async () => {
