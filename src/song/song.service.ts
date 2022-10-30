@@ -12,10 +12,19 @@ import { SongDto } from './song.dtos';
 export class SongService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getAllSongs(): Promise<SongDto[]> {
+  async getAllSongs(): Promise<SongResponseDto[]> {
+    const songs: SongResponseDto[] = [];
     const songEntities = await this.prisma.song.findMany();
 
-    return songEntities.map((entity) => SongDto.fromSongEntity(entity));
+    for (const songEntity of songEntities) {
+      const songArtists = await this.prisma.artist.findMany({
+        where: { songs: { some: { song_id: songEntity.id } } },
+      });
+
+      songs.push(SongResponseDto.fromEntities(songEntity, songArtists));
+    }
+
+    return songs;
   }
 
   async getSongById(id: number): Promise<SongDto> {

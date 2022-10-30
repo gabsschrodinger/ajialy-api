@@ -17,7 +17,7 @@ export class SongController {
   constructor(private readonly songService: SongService) {}
 
   @Get()
-  async getAllSongs(): Promise<SongDto[]> {
+  async getAllSongs(): Promise<SongResponseDto[]> {
     return this.songService.getAllSongs();
   }
 

@@ -5,9 +5,10 @@ import { Song } from '@prisma/client';
 import { plainToClass } from 'class-transformer';
 import { PrismaService } from '../prisma.service';
 import { CreateSongDto } from './dtos/CreateSong.dto';
+import { SongResponseDto } from './dtos/SongResponse.dto';
 import { SongDto } from './song.dtos';
 import { SongService } from './song.service';
-import { generateMockSong } from './song.test.utils';
+import { generateMockArtist, generateMockSong } from './song.test.utils';
 
 describe('SongService', () => {
   let prismaService: PrismaService;
@@ -29,6 +30,7 @@ describe('SongService', () => {
   describe('get all songs', () => {
     it('should get all song entities from the database', async () => {
       prismaService.song.findMany = jest.fn().mockResolvedValue([]);
+      prismaService.artist.findMany = jest.fn().mockResolvedValue([]);
 
       await songService.getAllSongs();
 
@@ -37,12 +39,18 @@ describe('SongService', () => {
 
     it('should return all song entities converted to dto', async () => {
       const mockedSongs = [generateMockSong()];
+      const mockedArtists = [generateMockArtist()];
       prismaService.song.findMany = jest.fn().mockResolvedValue(mockedSongs);
+      prismaService.artist.findMany = jest
+        .fn()
+        .mockResolvedValue(mockedArtists);
 
       const foundSongs = await songService.getAllSongs();
 
       expect(foundSongs).toEqual(
-        mockedSongs.map((song) => SongDto.fromSongEntity(song)),
+        mockedSongs.map((song) =>
+          SongResponseDto.fromEntities(song, mockedArtists),
+        ),
       );
     });
   });
