@@ -6,7 +6,7 @@ import { CreateSongDto } from './dtos/CreateSong.dto';
 import { SongResponseDto } from './dtos/SongResponse.dto';
 import { SongController } from './song.controller';
 import { SongService } from './song.service';
-import { generateMockSong } from './song.test.utils';
+import { generateMockSong } from '../utils/test.utils';
 
 describe('SongController', () => {
   let songService: SongService;

@@ -1,6 +1,6 @@
 import { Artist, Song } from '@prisma/client';
 import { faker } from '@faker-js/faker';
-import { OriginalLyrics } from './enums/OriginalLyrics';
+import { OriginalLyrics } from '../song/enums/OriginalLyrics';
 
 export function generateMockSong({ id }: Partial<Song> = {}): Song {
   return {

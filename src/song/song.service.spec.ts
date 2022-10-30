@@ -8,7 +8,7 @@ import { CreateSongDto } from './dtos/CreateSong.dto';
 import { SongResponseDto } from './dtos/SongResponse.dto';
 import { SongDto } from './song.dtos';
 import { SongService } from './song.service';
-import { generateMockArtist, generateMockSong } from './song.test.utils';
+import { generateMockArtist, generateMockSong } from '../utils/test.utils';
 
 describe('SongService', () => {
   let prismaService: PrismaService;

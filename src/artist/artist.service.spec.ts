@@ -3,7 +3,7 @@ import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Artist } from '@prisma/client';
 import { plainToClass } from 'class-transformer';
-import { generateMockArtist } from '../song/song.test.utils';
+import { generateMockArtist } from '../utils/test.utils';
 import { PrismaService } from '../prisma.service';
 import { ArtistService } from './artist.service';
 import { ArtistResponseDto } from './dtos/ArtistResponse.dto';

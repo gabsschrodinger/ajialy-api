@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { plainToClass } from 'class-transformer';
 import { PrismaService } from '../prisma.service';
-import { generateMockArtist } from '../song/song.test.utils';
+import { generateMockArtist } from '../utils/test.utils';
 import { ArtistController } from './artist.controller';
 import { ArtistService } from './artist.service';
 import { ArtistResponseDto } from './dtos/ArtistResponse.dto';
