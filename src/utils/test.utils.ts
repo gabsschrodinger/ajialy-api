@@ -1,6 +1,8 @@
 import { Artist, Song } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 import { OriginalLyrics } from '../song/enums/OriginalLyrics';
+import { PrismaService } from '../prisma.service';
+import { mock } from 'jest-mock-extended';
 
 export function generateMockSong({ id }: Partial<Song> = {}): Song {
   return {
@@ -19,4 +21,19 @@ export function generateMockArtist({ id }: Partial<Artist> = {}): Artist {
     name: faker.name.firstName(),
     image: faker.image.imageUrl(),
   };
+}
+
+export function generateMockPrisma(): PrismaService {
+  return mock<PrismaService>({
+    song: {
+      findMany: jest.fn().mockResolvedValue([]),
+      findUnique: jest.fn().mockResolvedValue({}),
+      create: jest.fn().mockResolvedValue({}),
+    },
+    artist: {
+      findMany: jest.fn().mockResolvedValue([]),
+      findUnique: jest.fn().mockResolvedValue({}),
+      create: jest.fn().mockResolvedValue({}),
+    },
+  });
 }

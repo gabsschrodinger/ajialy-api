@@ -7,7 +7,11 @@ import { PrismaService } from '../prisma.service';
 import { CreateSongDto } from './dtos/CreateSong.dto';
 import { SongResponseDto } from './dtos/SongResponse.dto';
 import { SongService } from './song.service';
-import { generateMockArtist, generateMockSong } from '../utils/test.utils';
+import {
+  generateMockArtist,
+  generateMockPrisma,
+  generateMockSong,
+} from '../utils/test.utils';
 
 describe('SongService', () => {
   let prismaService: PrismaService;
@@ -16,21 +20,17 @@ describe('SongService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [SongService, PrismaService],
-    }).compile();
+    })
+      .overrideProvider(PrismaService)
+      .useValue(generateMockPrisma())
+      .compile();
 
     songService = module.get<SongService>(SongService);
     prismaService = module.get<PrismaService>(PrismaService);
   });
 
-  it('should be defined', () => {
-    expect(songService).toBeDefined();
-  });
-
   describe('get all songs', () => {
     it('should get all song entities from the database', async () => {
-      prismaService.song.findMany = jest.fn().mockResolvedValue([]);
-      prismaService.artist.findMany = jest.fn().mockResolvedValue([]);
-
       await songService.getAllSongs();
 
       expect(prismaService.song.findMany).toHaveBeenCalled();
@@ -63,7 +63,6 @@ describe('SongService', () => {
         .mockImplementation(async ({ data }: { data: Song }) =>
           Promise.resolve(data),
         );
-      prismaService.artist.findMany = jest.fn().mockResolvedValue([]);
       const createSongDto = plainToClass(CreateSongDto, {
         name: mockedSong.name,
         artists: [],
@@ -86,7 +85,6 @@ describe('SongService', () => {
         .mockImplementation(async ({ data }: { data: Song }) =>
           Promise.resolve(data),
         );
-      prismaService.artist.findMany = jest.fn().mockResolvedValue([]);
       const createSongDto = plainToClass(CreateSongDto, {
         name: mockedSong.name,
         artists: [],
@@ -106,9 +104,6 @@ describe('SongService', () => {
     const randomId = faker.datatype.number();
 
     it('should get song entities from the database', async () => {
-      prismaService.song.findUnique = jest.fn().mockResolvedValue({});
-      prismaService.artist.findMany = jest.fn().mockResolvedValue([]);
-
       await songService.getSongById(randomId);
 
       expect(prismaService.song.findUnique).toHaveBeenCalledWith({
@@ -119,7 +114,6 @@ describe('SongService', () => {
     it('should return song entities converted to dto', async () => {
       const mockedSong = generateMockSong({ id: randomId });
       prismaService.song.findUnique = jest.fn().mockResolvedValue(mockedSong);
-      prismaService.artist.findMany = jest.fn().mockResolvedValue([]);
 
       const foundSong = await songService.getSongById(randomId);
 

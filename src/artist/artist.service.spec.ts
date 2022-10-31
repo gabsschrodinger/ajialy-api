@@ -3,7 +3,7 @@ import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Artist } from '@prisma/client';
 import { plainToClass } from 'class-transformer';
-import { generateMockArtist } from '../utils/test.utils';
+import { generateMockArtist, generateMockPrisma } from '../utils/test.utils';
 import { PrismaService } from '../prisma.service';
 import { ArtistService } from './artist.service';
 import { ArtistResponseDto } from './dtos/ArtistResponse.dto';
@@ -16,21 +16,17 @@ describe('ArtistService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [ArtistService, PrismaService],
-    }).compile();
+    })
+      .overrideProvider(PrismaService)
+      .useValue(generateMockPrisma())
+      .compile();
 
     artistService = module.get<ArtistService>(ArtistService);
     prismaService = module.get<PrismaService>(PrismaService);
   });
 
-  it('should be defined', () => {
-    expect(artistService).toBeDefined();
-  });
-
   describe('get all artists', () => {
     it('should get all artist entities from the database', async () => {
-      prismaService.artist.findMany = jest.fn().mockResolvedValue([]);
-      prismaService.song.findMany = jest.fn().mockResolvedValue([]);
-
       await artistService.getAllArtists();
 
       expect(prismaService.artist.findMany).toHaveBeenCalled();
@@ -41,7 +37,6 @@ describe('ArtistService', () => {
       prismaService.artist.findMany = jest
         .fn()
         .mockResolvedValue(mockedArtists);
-      prismaService.song.findMany = jest.fn().mockResolvedValue([]);
 
       const foundArtists = await artistService.getAllArtists();
 
@@ -60,7 +55,6 @@ describe('ArtistService', () => {
         .mockImplementation(async ({ data }: { data: Artist }) =>
           Promise.resolve(data),
         );
-      prismaService.song.findMany = jest.fn().mockResolvedValue([]);
       const createArtistDto = plainToClass(CreateArtistDto, {
         name: mockedArtist.name,
         image: mockedArtist.image,
@@ -79,7 +73,6 @@ describe('ArtistService', () => {
         .mockImplementation(async ({ data }: { data: Artist }) =>
           Promise.resolve(data),
         );
-      prismaService.song.findMany = jest.fn().mockResolvedValue([]);
       const createArtistDto = plainToClass(CreateArtistDto, {
         name: mockedArtist.name,
         image: mockedArtist.image,
@@ -95,9 +88,6 @@ describe('ArtistService', () => {
     const randomId = faker.datatype.number();
 
     it('should get artist entities from the database', async () => {
-      prismaService.artist.findUnique = jest.fn().mockResolvedValue({});
-      prismaService.song.findMany = jest.fn().mockResolvedValue([]);
-
       await artistService.getArtistById(randomId);
 
       expect(prismaService.artist.findUnique).toHaveBeenCalledWith({
@@ -110,7 +100,6 @@ describe('ArtistService', () => {
       prismaService.artist.findUnique = jest
         .fn()
         .mockResolvedValue(mockedArtist);
-      prismaService.song.findMany = jest.fn().mockResolvedValue([]);
 
       const foundArtist = await artistService.getArtistById(randomId);
 
@@ -119,7 +108,6 @@ describe('ArtistService', () => {
 
     it('should throw Not Found when no artist is found', async () => {
       prismaService.artist.findUnique = jest.fn().mockResolvedValue(undefined);
-      prismaService.song.findMany = jest.fn().mockResolvedValue([]);
 
       await expect(artistService.getArtistById(randomId)).rejects.toThrow(
         NotFoundException,

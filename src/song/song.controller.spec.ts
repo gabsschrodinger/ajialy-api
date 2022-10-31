@@ -22,10 +22,6 @@ describe('SongController', () => {
     songController = module.get<SongController>(SongController);
   });
 
-  it('should be defined', () => {
-    expect(songController).toBeDefined();
-  });
-
   describe('get all songs', () => {
     const mockedSongs = [generateMockSong()];
 

@@ -22,10 +22,6 @@ describe('ArtistController', () => {
     artistService = module.get<ArtistService>(ArtistService);
   });
 
-  it('should be defined', () => {
-    expect(artistController).toBeDefined();
-  });
-
   describe('get all artists', () => {
     const mockedArtists = [generateMockArtist()];
 
