@@ -5,7 +5,7 @@ export type GetProperties<T> = Pick<
   }[keyof T]
 >;
 
-export type PropsExcept<T, O extends string> = Pick<
+export type PropsExcept<T, O extends keyof T> = Pick<
   T,
   {
     [K in keyof T]: K extends O ? undefined : K;
