@@ -4,7 +4,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Artist } from '@prisma/client';
 import { plainToClass } from 'class-transformer';
 import {
-  generateMockArtist,
   generateMockArtistWithSongs,
   generateMockPrisma,
 } from '../utils/test.utils';
@@ -53,13 +52,13 @@ describe('ArtistService', () => {
   });
 
   describe('save artist', () => {
-    const mockedArtist = generateMockArtist();
+    const mockedArtist = generateMockArtistWithSongs();
 
     it('should save the received artist in the database', async () => {
       prismaService.artist.create = jest
         .fn()
         .mockImplementation(async ({ data }: { data: Artist }) =>
-          Promise.resolve(data),
+          Promise.resolve(generateMockArtistWithSongs(data)),
         );
       const createArtistDto = plainToClass(CreateArtistDto, {
         name: mockedArtist.name,
@@ -70,6 +69,7 @@ describe('ArtistService', () => {
 
       expect(prismaService.artist.create).toHaveBeenCalledWith({
         data: createArtistDto.toArtistEntity(),
+        include: { songs: { select: { song: true } } },
       });
     });
 
@@ -77,7 +77,7 @@ describe('ArtistService', () => {
       prismaService.artist.create = jest
         .fn()
         .mockImplementation(async ({ data }: { data: Artist }) =>
-          Promise.resolve(data),
+          Promise.resolve(generateMockArtistWithSongs(data)),
         );
       const createArtistDto = plainToClass(CreateArtistDto, {
         name: mockedArtist.name,

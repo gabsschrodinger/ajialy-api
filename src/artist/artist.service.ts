@@ -38,8 +38,9 @@ export class ArtistService {
   ): Promise<ArtistResponseDto> {
     const artistEntity = await this.prisma.artist.create({
       data: createArtistDto.toArtistEntity(),
+      include: { songs: { select: { song: true } } },
     });
 
-    return ArtistResponseDto.fromEntites(artistEntity);
+    return ArtistResponseDto.fromArtistEntity(artistEntity);
   }
 }

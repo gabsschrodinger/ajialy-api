@@ -16,25 +16,26 @@ export function generateMockSong({ id }: Partial<Song> = {}): Song {
   };
 }
 
-export function generateMockArtist({ id }: Partial<Artist> = {}): Artist {
+export function generateMockArtist(artist: Partial<Artist> = {}): Artist {
   return {
-    id: id ?? faker.datatype.number(),
+    id: faker.datatype.number(),
     name: faker.name.firstName(),
     image: faker.image.imageUrl(),
+    ...artist,
   };
 }
 
-export function generateMockArtistWithSongs({
-  id,
-}: Partial<ArtistWithSongs> = {}): ArtistWithSongs {
+export function generateMockArtistWithSongs(
+  artist: Partial<ArtistWithSongs> = {},
+): ArtistWithSongs {
   return {
-    ...generateMockArtist({ id }),
     songs: Array.from(
       { length: faker.datatype.number({ min: 1, max: 10 }) },
       () => ({
         song: generateMockSong(),
       }),
     ),
+    ...generateMockArtist(artist),
   };
 }
 
