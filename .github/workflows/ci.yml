@@ -30,3 +30,8 @@ jobs:
 
       - name: Run unit tests
         run: yarn test
+
+      - name: Run E2E tests
+        run: yarn jest --config ./test/jest-e2e.json
+        env:
+          DATABASE_URL: 'postgresql://postgres@localhost:5432/mydb?schema=public'
