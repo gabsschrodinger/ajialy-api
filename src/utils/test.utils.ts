@@ -51,5 +51,6 @@ export function generateMockPrisma(): PrismaService {
       findUnique: jest.fn().mockResolvedValue(generateMockArtistWithSongs()),
       create: jest.fn().mockResolvedValue(generateMockArtistWithSongs()),
     },
+    clearDatabase: jest.fn().mockResolvedValue(undefined),
   });
 }
