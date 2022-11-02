@@ -12,4 +12,13 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       await app.close();
     });
   }
+
+  /**
+   * Implementation from harryhorton (https://github.com/prisma/docs/issues/451)
+   */
+  async clearDatabase(): Promise<void> {
+    const models = Reflect.ownKeys(this).filter((key) => key[0] !== '_');
+
+    await Promise.all(models.map((modelKey) => this[modelKey].deleteMany()));
+  }
 }
