@@ -3,7 +3,11 @@ import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Artist } from '@prisma/client';
 import { plainToClass } from 'class-transformer';
-import { generateMockArtist, generateMockPrisma } from '../utils/test.utils';
+import {
+  generateMockArtist,
+  generateMockArtistWithSongs,
+  generateMockPrisma,
+} from '../utils/test.utils';
 import { PrismaService } from '../prisma.service';
 import { ArtistService } from './artist.service';
 import { ArtistResponseDto } from './dtos/ArtistResponse.dto';
@@ -92,18 +96,21 @@ describe('ArtistService', () => {
 
       expect(prismaService.artist.findUnique).toHaveBeenCalledWith({
         where: { id: randomId },
+        include: { songs: { select: { song: true } } },
       });
     });
 
     it('should return artist entities converted to dto', async () => {
-      const mockedArtist = generateMockArtist({ id: randomId });
+      const mockedArtist = generateMockArtistWithSongs({ id: randomId });
       prismaService.artist.findUnique = jest
         .fn()
         .mockResolvedValue(mockedArtist);
 
       const foundArtist = await artistService.getArtistById(randomId);
 
-      expect(foundArtist).toEqual(ArtistResponseDto.fromEntites(mockedArtist));
+      expect(foundArtist).toEqual(
+        ArtistResponseDto.fromArtistEntity(mockedArtist),
+      );
     });
 
     it('should throw Not Found when no artist is found', async () => {

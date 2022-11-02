@@ -28,7 +28,10 @@ export class ArtistService {
   }
 
   async getArtistById(id: number): Promise<ArtistResponseDto> {
-    const artistEntity = await this.prisma.artist.findUnique({ where: { id } });
+    const artistEntity = await this.prisma.artist.findUnique({
+      where: { id },
+      include: { songs: { select: { song: true } } },
+    });
 
     if (!artistEntity) {
       throw new NotFoundException({
@@ -37,8 +40,7 @@ export class ArtistService {
       });
     }
 
-    const songEntities = await this.getArtistSongs(artistEntity);
-    return ArtistResponseDto.fromEntites(artistEntity, songEntities);
+    return ArtistResponseDto.fromArtistEntity(artistEntity);
   }
 
   async saveArtist(

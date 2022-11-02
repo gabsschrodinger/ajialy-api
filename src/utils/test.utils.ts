@@ -3,6 +3,7 @@ import { faker } from '@faker-js/faker';
 import { OriginalLyrics } from '../song/enums/OriginalLyrics';
 import { PrismaService } from '../prisma.service';
 import { mock } from 'jest-mock-extended';
+import { ArtistWithSongs } from 'src/artist/artist.types';
 
 export function generateMockSong({ id }: Partial<Song> = {}): Song {
   return {
@@ -23,17 +24,31 @@ export function generateMockArtist({ id }: Partial<Artist> = {}): Artist {
   };
 }
 
+export function generateMockArtistWithSongs({
+  id,
+}: Partial<ArtistWithSongs> = {}): ArtistWithSongs {
+  return {
+    ...generateMockArtist({ id }),
+    songs: Array.from(
+      { length: faker.datatype.number({ min: 1, max: 10 }) },
+      () => ({
+        song: generateMockSong(),
+      }),
+    ),
+  };
+}
+
 export function generateMockPrisma(): PrismaService {
   return mock<PrismaService>({
     song: {
       findMany: jest.fn().mockResolvedValue([]),
-      findUnique: jest.fn().mockResolvedValue({}),
-      create: jest.fn().mockResolvedValue({}),
+      findUnique: jest.fn().mockResolvedValue(generateMockSong()),
+      create: jest.fn().mockResolvedValue(generateMockSong()),
     },
     artist: {
       findMany: jest.fn().mockResolvedValue([]),
-      findUnique: jest.fn().mockResolvedValue({}),
-      create: jest.fn().mockResolvedValue({}),
+      findUnique: jest.fn().mockResolvedValue(generateMockArtistWithSongs()),
+      create: jest.fn().mockResolvedValue(generateMockArtistWithSongs()),
     },
   });
 }
