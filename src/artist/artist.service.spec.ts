@@ -37,7 +37,7 @@ describe('ArtistService', () => {
     });
 
     it('should return all artist entities converted to dto', async () => {
-      const mockedArtists = [generateMockArtist()];
+      const mockedArtists = [generateMockArtistWithSongs()];
       prismaService.artist.findMany = jest
         .fn()
         .mockResolvedValue(mockedArtists);
@@ -45,7 +45,9 @@ describe('ArtistService', () => {
       const foundArtists = await artistService.getAllArtists();
 
       expect(foundArtists).toEqual(
-        mockedArtists.map((artist) => ArtistResponseDto.fromEntites(artist)),
+        mockedArtists.map((artist) =>
+          ArtistResponseDto.fromArtistEntity(artist),
+        ),
       );
     });
   });
