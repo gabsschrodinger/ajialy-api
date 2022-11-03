@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export ENVIRONMENT="e2e"
+
 sleep 5
 
 yarn database:setup
