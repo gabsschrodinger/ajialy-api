@@ -17,6 +17,12 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
+  afterAll(async () => {
+    await request(app.getHttpServer()).delete('/e2e/');
+
+    await app.close();
+  });
+
   describe('/artists', () => {
     const artist = generateMockArtist();
     const artist2 = generateMockArtist();
