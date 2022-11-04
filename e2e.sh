@@ -2,7 +2,7 @@
 
 export ENVIRONMENT="e2e"
 
-sleep 5
+sleep 10
 
 yarn database:setup
 yarn prisma generate
