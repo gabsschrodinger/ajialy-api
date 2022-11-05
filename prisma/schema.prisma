@@ -28,9 +28,9 @@ model Song {
 }
 
 model ArtistsOnSongs {
-  song      Song   @relation(fields: [song_id], references: [id])
+  song      Song   @relation(fields: [song_id], references: [id], onDelete: Cascade)
   song_id   Int
-  artist    Artist @relation(fields: [artist_id], references: [id])
+  artist    Artist @relation(fields: [artist_id], references: [id], onDelete: Cascade)
   artist_id Int
 
   @@id([song_id, artist_id])
