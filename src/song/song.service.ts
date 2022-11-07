@@ -61,11 +61,12 @@ export class SongService {
       data: {
         ...song.toSongEntity(),
         artists: {
-          createMany: {
-            data: artistEntities.map(({ id }) => ({ artist_id: id })),
-          },
+          create: artistEntities.map(({ id }) => ({
+            artist: { connect: { id } },
+          })),
         },
       },
+      include: { artists: { select: { artist: true } } },
     });
 
     return SongResponseDto.fromSongEntity(songEntity);

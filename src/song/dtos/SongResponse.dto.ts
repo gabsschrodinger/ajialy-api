@@ -3,6 +3,7 @@ import { plainToClass } from 'class-transformer';
 import { ArtistResponseDto } from '../../artist/dtos/ArtistResponse.dto';
 import { PropsExcept } from '../../utils/types.utils';
 import { OriginalLyrics } from '../enums/OriginalLyrics';
+import { SongWithArtists } from '../song.types';
 
 export class SongResponseDto {
   id: number;
@@ -37,15 +38,20 @@ export class SongResponseDto {
     lyrics_eng,
     lyrics_por,
     original_lyrics,
-  }: Song): SongResponseDto {
-    const mapped = {
+    artists,
+  }: SongWithArtists): SongResponseDto {
+    const mapped: SongResponseDto = {
       id,
       name,
-      artists: [],
+      artists: artists.map(({ artist }) => ({
+        id: artist.id,
+        name: artist.name,
+        image: artist.image,
+      })),
       japaneseLyrics: lyrics_jp,
       englishLyrics: lyrics_eng,
       portugueseLyrics: lyrics_por,
-      originalLyrics: original_lyrics,
+      originalLyrics: original_lyrics as OriginalLyrics,
     };
 
     return plainToClass(SongResponseDto, mapped);

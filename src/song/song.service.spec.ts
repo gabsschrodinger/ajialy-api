@@ -11,6 +11,7 @@ import {
   generateMockArtist,
   generateMockPrisma,
   generateMockSong,
+  generateMockSongWithArtists,
 } from '../utils/test.utils';
 
 describe('SongService', () => {
@@ -61,7 +62,17 @@ describe('SongService', () => {
       prismaService.song.create = jest
         .fn()
         .mockImplementation(async ({ data }: { data: Song }) =>
-          Promise.resolve(data),
+          Promise.resolve(
+            generateMockSongWithArtists({
+              id: data.id,
+              name: data.name,
+              lyrics_eng: data.lyrics_eng,
+              lyrics_por: data.lyrics_por,
+              lyrics_jp: data.lyrics_jp,
+              original_lyrics: data.original_lyrics,
+              artists: [],
+            }),
+          ),
         );
       const createSongDto = plainToClass(CreateSongDto, {
         name: mockedSong.name,
@@ -76,6 +87,7 @@ describe('SongService', () => {
 
       expect(prismaService.song.create).toHaveBeenCalledWith({
         data: expect.objectContaining(createSongDto.toSongEntity()),
+        include: { artists: { select: { artist: true } } },
       });
     });
 
@@ -83,7 +95,17 @@ describe('SongService', () => {
       prismaService.song.create = jest
         .fn()
         .mockImplementation(async ({ data }: { data: Song }) =>
-          Promise.resolve(data),
+          Promise.resolve(
+            generateMockSongWithArtists({
+              id: data.id,
+              name: data.name,
+              lyrics_eng: data.lyrics_eng,
+              lyrics_por: data.lyrics_por,
+              lyrics_jp: data.lyrics_jp,
+              original_lyrics: data.original_lyrics,
+              artists: [],
+            }),
+          ),
         );
       const createSongDto = plainToClass(CreateSongDto, {
         name: mockedSong.name,
