@@ -59,7 +59,7 @@ export function generateMockPrisma(): PrismaService {
   return mock<PrismaService>({
     song: {
       findMany: jest.fn().mockResolvedValue([]),
-      findUnique: jest.fn().mockResolvedValue(generateMockSong()),
+      findUnique: jest.fn().mockResolvedValue(generateMockSongWithArtists()),
       create: jest.fn().mockResolvedValue(generateMockSongWithArtists()),
     },
     artist: {

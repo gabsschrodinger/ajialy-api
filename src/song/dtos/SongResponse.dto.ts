@@ -1,4 +1,3 @@
-import { Artist, Song } from '@prisma/client';
 import { plainToClass } from 'class-transformer';
 import { ArtistResponseDto } from '../../artist/dtos/ArtistResponse.dto';
 import { PropsExcept } from '../../utils/types.utils';
@@ -13,23 +12,6 @@ export class SongResponseDto {
   englishLyrics: string;
   portugueseLyrics: string;
   originalLyrics: OriginalLyrics;
-
-  static fromEntities(
-    songEntity: Song,
-    artistEntities: Artist[] = [],
-  ): SongResponseDto {
-    const mapped: SongResponseDto = {
-      id: songEntity.id,
-      name: songEntity.name,
-      artists: artistEntities,
-      japaneseLyrics: songEntity.lyrics_jp,
-      englishLyrics: songEntity.lyrics_eng,
-      portugueseLyrics: songEntity.lyrics_por,
-      originalLyrics: songEntity.original_lyrics as OriginalLyrics,
-    };
-
-    return plainToClass(SongResponseDto, mapped);
-  }
 
   static fromSongEntity({
     id,

@@ -8,7 +8,6 @@ import { CreateSongDto } from './dtos/CreateSong.dto';
 import { SongResponseDto } from './dtos/SongResponse.dto';
 import { SongService } from './song.service';
 import {
-  generateMockArtist,
   generateMockPrisma,
   generateMockSong,
   generateMockSongWithArtists,
@@ -38,19 +37,13 @@ describe('SongService', () => {
     });
 
     it('should return all song entities converted to dto', async () => {
-      const mockedSongs = [generateMockSong()];
-      const mockedArtists = [generateMockArtist()];
+      const mockedSongs = [generateMockSongWithArtists()];
       prismaService.song.findMany = jest.fn().mockResolvedValue(mockedSongs);
-      prismaService.artist.findMany = jest
-        .fn()
-        .mockResolvedValue(mockedArtists);
 
       const foundSongs = await songService.getAllSongs();
 
       expect(foundSongs).toEqual(
-        mockedSongs.map((song) =>
-          SongResponseDto.fromEntities(song, mockedArtists),
-        ),
+        mockedSongs.map((song) => SongResponseDto.fromSongEntity(song)),
       );
     });
   });
@@ -76,7 +69,7 @@ describe('SongService', () => {
         );
       const createSongDto = plainToClass(CreateSongDto, {
         name: mockedSong.name,
-        artists: [],
+        artistIds: [],
         japaneseLyrics: mockedSong.lyrics_jp,
         englishLyrics: mockedSong.lyrics_eng,
         portugueseLyrics: mockedSong.lyrics_por,
@@ -109,7 +102,7 @@ describe('SongService', () => {
         );
       const createSongDto = plainToClass(CreateSongDto, {
         name: mockedSong.name,
-        artists: [],
+        artistIds: [],
         japaneseLyrics: mockedSong.lyrics_jp,
         englishLyrics: mockedSong.lyrics_eng,
         portugueseLyrics: mockedSong.lyrics_por,
@@ -118,7 +111,11 @@ describe('SongService', () => {
 
       const savedSong = await songService.saveSong(createSongDto);
 
-      expect(savedSong).toEqual(createSongDto);
+      expect(savedSong).toEqual({
+        ...createSongDto,
+        artists: [],
+        artistIds: undefined,
+      });
     });
   });
 
@@ -130,17 +127,18 @@ describe('SongService', () => {
 
       expect(prismaService.song.findUnique).toHaveBeenCalledWith({
         where: { id: randomId },
+        include: { artists: { select: { artist: true } } },
       });
     });
 
     it('should return song entities converted to dto', async () => {
-      const mockedSong = generateMockSong({ id: randomId });
+      const mockedSong = generateMockSongWithArtists({ id: randomId });
       prismaService.song.findUnique = jest.fn().mockResolvedValue(mockedSong);
 
       const foundSong = await songService.getSongById(randomId);
 
       expect(foundSong).toEqual(
-        expect.objectContaining(SongResponseDto.fromEntities(mockedSong)),
+        expect.objectContaining(SongResponseDto.fromSongEntity(mockedSong)),
       );
     });
 

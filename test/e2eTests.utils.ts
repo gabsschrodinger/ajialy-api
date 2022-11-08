@@ -1,6 +1,9 @@
 import { INestApplication } from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
+import { generateMockArtist } from '../src/utils/test.utils';
 import * as request from 'supertest';
+import { ArtistResponseDto } from '../src/artist/dtos/ArtistResponse.dto';
+import { Song } from '@prisma/client';
 
 export class E2eApp {
   constructor(private readonly app: INestApplication) {}
@@ -15,8 +18,34 @@ export class E2eApp {
     return request(this.app.getHttpServer()).post('/artists').send(artist);
   }
 
+  async setRandomArtist(): Promise<ArtistResponseDto> {
+    const artist = generateMockArtist();
+    const response = await this.createArtistRequest({
+      name: artist.name,
+      image: artist.image,
+    });
+
+    return response.body;
+  }
+
   async createSongRequest(song: object): Promise<request.Response> {
     return request(this.app.getHttpServer()).post('/songs').send(song);
+  }
+
+  async createSongFromEntity(
+    song: Song,
+    artistId: number,
+  ): Promise<request.Response> {
+    return request(this.app.getHttpServer())
+      .post('/songs')
+      .send({
+        name: song.name,
+        artistIds: [artistId],
+        englishLyrics: song.lyrics_eng,
+        portugueseLyrics: song.lyrics_por,
+        japaneseLyrics: song.lyrics_jp,
+        originalLyrics: song.original_lyrics,
+      });
   }
 
   async getAllArtistsRequest(): Promise<request.Response> {

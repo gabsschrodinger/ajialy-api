@@ -65,7 +65,7 @@ describe('SongController', () => {
         .mockImplementation(
           async ({
             name,
-            artists,
+            artistIds,
             japaneseLyrics,
             englishLyrics,
             portugueseLyrics,
@@ -75,7 +75,7 @@ describe('SongController', () => {
               plainToClass(SongResponseDto, {
                 id: faker.datatype.number(),
                 name,
-                artists,
+                artistIds,
                 japaneseLyrics,
                 englishLyrics,
                 portugueseLyrics,

@@ -1,13 +1,13 @@
 import { Song } from '@prisma/client';
-import { IsEnum, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsString } from 'class-validator';
 import { OriginalLyrics } from '../enums/OriginalLyrics';
 
 export class CreateSongDto {
   @IsString()
   name: string;
 
-  @IsString({ each: true })
-  artists: string[];
+  @IsNumber(undefined, { each: true })
+  artistIds: number[];
 
   @IsString()
   japaneseLyrics: string;

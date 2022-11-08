@@ -1,9 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import {
-  BadRequestException,
-  NotFoundException,
-} from '@nestjs/common/exceptions';
-import { Artist, Song } from '@prisma/client';
+import { NotFoundException } from '@nestjs/common/exceptions';
 import { PrismaService } from '../prisma.service';
 import { CreateSongDto } from './dtos/CreateSong.dto';
 import { SongResponseDto } from './dtos/SongResponse.dto';
@@ -12,27 +8,19 @@ import { SongResponseDto } from './dtos/SongResponse.dto';
 export class SongService {
   constructor(private readonly prisma: PrismaService) {}
 
-  private async getSongArtists(song: Song): Promise<Artist[]> {
-    return this.prisma.artist.findMany({
-      where: { songs: { some: { song_id: song.id } } },
-    });
-  }
-
   async getAllSongs(): Promise<SongResponseDto[]> {
-    const songs: SongResponseDto[] = [];
-    const songEntities = await this.prisma.song.findMany();
+    const songEntities = await this.prisma.song.findMany({
+      include: { artists: { select: { artist: true } } },
+    });
 
-    for (const songEntity of songEntities) {
-      const songArtists = await this.getSongArtists(songEntity);
-
-      songs.push(SongResponseDto.fromEntities(songEntity, songArtists));
-    }
-
-    return songs;
+    return songEntities.map((song) => SongResponseDto.fromSongEntity(song));
   }
 
   async getSongById(id: number): Promise<SongResponseDto> {
-    const songEntity = await this.prisma.song.findUnique({ where: { id } });
+    const songEntity = await this.prisma.song.findUnique({
+      where: { id },
+      include: { artists: { select: { artist: true } } },
+    });
 
     if (!songEntity) {
       throw new NotFoundException({
@@ -41,27 +29,15 @@ export class SongService {
       });
     }
 
-    const songArtists = await this.getSongArtists(songEntity);
-    return SongResponseDto.fromEntities(songEntity, songArtists);
+    return SongResponseDto.fromSongEntity(songEntity);
   }
 
   async saveSong(song: CreateSongDto): Promise<SongResponseDto> {
-    const artistEntities = await this.prisma.artist.findMany({
-      where: { OR: song.artists.map((name) => ({ name })) },
-    });
-
-    if (artistEntities.length !== song.artists.length) {
-      throw new BadRequestException({
-        status: HttpStatus.BAD_REQUEST,
-        error: 'Invalid artist',
-      });
-    }
-
     const songEntity = await this.prisma.song.create({
       data: {
         ...song.toSongEntity(),
         artists: {
-          create: artistEntities.map(({ id }) => ({
+          create: song.artistIds.map((id) => ({
             artist: { connect: { id } },
           })),
         },
