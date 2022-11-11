@@ -1,3 +1,5 @@
+.github/
+test/
 node_modules
 *.test*
 *.spec*
