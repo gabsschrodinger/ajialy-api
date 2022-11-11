@@ -29,7 +29,7 @@ export class SongController {
 
   @Post()
   async saveSong(
-    @Body(new ValidationPipe({ transform: true }))
+    @Body(new ValidationPipe({ transform: true, expectedType: CreateSongDto }))
     createSongDto: CreateSongDto,
   ): Promise<SongResponseDto> {
     return this.songService.saveSong(createSongDto);
